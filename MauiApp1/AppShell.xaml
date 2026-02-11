@@ -6,10 +6,20 @@
     xmlns:local="clr-namespace:MauiApp1"
     Title="MauiApp1">
 
-    
-    <ShellContent
+
+    <TabBar>
+        <ShellContent
         Title="CountCent"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
+
+        <ShellContent 
+            Title="About"
+            ContentTemplate="{DataTemplate local:AboutPage}"
+           Route="AboutPage"
+            Icon="{OnPlatform 'icon_about.png', iOS='icon_about_ios.png', MacCatalyst='icon_about_ios.png'}"
+            />
+    </TabBar>
+    
 
 </Shell>
