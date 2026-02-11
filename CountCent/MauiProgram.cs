@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace MauiApp1
+namespace CountCent
 {
     public static class MauiProgram
     {

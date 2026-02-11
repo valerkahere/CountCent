@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace MauiApp1
+namespace CountCent
 {
     public partial class App : Application
     {
