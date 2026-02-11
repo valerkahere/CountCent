@@ -1,8 +1,8 @@
 namespace CountCent
 {
-    public partial class EntryPage : ContentPage
+    public partial class Settings : ContentPage
     {
-        public EntryPage()
+        public Settings()
         {
             InitializeComponent();
         }
@@ -10,4 +10,3 @@ namespace CountCent
 
     }
 }
-

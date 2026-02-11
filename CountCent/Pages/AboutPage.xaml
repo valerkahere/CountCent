@@ -13,5 +13,7 @@
 
         <Label Text="This app is written in XAML and C# with .NET MAUI." />
         <Button Text="Learn more..." Clicked="LearnMore_Clicked" />
+        
+        
     </VerticalStackLayout>
 </ContentPage> 

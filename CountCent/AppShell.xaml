@@ -6,20 +6,21 @@
     xmlns:local="clr-namespace:CountCent"
     Title="CountCent">
 
-
     <TabBar>
         <ShellContent
-        Title="CountCent"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+            Title="CountCent"
+            ContentTemplate="{DataTemplate local:MainPage}"
+            Route="MainPage" />
 
-        <ShellContent 
+        <ShellContent
             Title="About"
             ContentTemplate="{DataTemplate local:AboutPage}"
-           Route="AboutPage"
             Icon="{OnPlatform 'icon_about.png', iOS='icon_about_ios.png', MacCatalyst='icon_about_ios.png'}"
-            />
-    </TabBar>
-    
+            Route="AboutPage" />
 
+        <ShellContent
+            Title="Settings"
+            ContentTemplate="{DataTemplate local:Settings}"
+            Route="Settings" />
+    </TabBar>
 </Shell>
