@@ -1,21 +1,24 @@
-namespace CountCent;
-
-public partial class AboutPage : ContentPage
+namespace CountCent.Views
 {
-    
-
-
-
-    public AboutPage()
+    public partial class AboutPage : ContentPage
     {
-        InitializeComponent();
 
-       
+
+
+
+        public AboutPage()
+        {
+            InitializeComponent();
+
+
+        }
+
+        private async void LearnMore_Clicked(object sender, EventArgs e)
+        {
+            // Navigate to the specified URL in the system browser
+            await Launcher.Default.OpenAsync("https://valerkahere.com");
+        }
     }
 
-    private async void LearnMore_Clicked(object sender, EventArgs e)
-    {
-        // Navigate to the specified URL in the system browser
-        await Launcher.Default.OpenAsync("https://valerkahere.com");
-    }
 }
+

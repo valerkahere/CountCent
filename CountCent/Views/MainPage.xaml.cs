@@ -1,4 +1,4 @@
-﻿namespace CountCent
+﻿namespace CountCent.Views
 {
     public partial class MainPage : ContentPage
     {
@@ -7,6 +7,8 @@
             InitializeComponent();
         }
 
-        
+
     }
 }
+
+

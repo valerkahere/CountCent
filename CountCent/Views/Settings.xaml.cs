@@ -1,4 +1,4 @@
-namespace CountCent
+namespace CountCent.Views
 {
     public partial class Settings : ContentPage
     {
@@ -31,7 +31,7 @@ namespace CountCent
             }
 
             TextEditor.Text = string.Empty;
-            
+
         }
     }
 }
