@@ -11,16 +11,5 @@
             Title="CountCent"
             ContentTemplate="{DataTemplate local:MainPage}"
             Route="MainPage" />
-
-        <ShellContent
-            Title="About"
-            ContentTemplate="{DataTemplate local:AboutPage}"
-            Icon="{OnPlatform 'icon_about.png', iOS='icon_about_ios.png', MacCatalyst='icon_about_ios.png'}"
-            Route="AboutPage" />
-
-        <ShellContent
-            Title="Settings"
-            ContentTemplate="{DataTemplate local:Settings}"
-            Route="Settings" />
     </TabBar>
 </Shell>

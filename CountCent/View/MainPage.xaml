@@ -3,5 +3,62 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="CountCent.MainPage">
 
-    
+    <Grid RowDefinitions="100, Auto, Auto"
+          ColumnDefinitions="*, *"
+          Padding="10"
+          RowSpacing="10"
+          ColumnSpacing="10"
+          MaximumWidthRequest="1000">
+
+        <Entry 
+            Placeholder="Enter task"
+            Grid.Row="0"
+            Grid.ColumnSpan="2"
+            />
+
+        <CollectionView
+            Grid.Row="1"
+            Grid.ColumnSpan="2">
+            <CollectionView.ItemsSource>
+                <x:Array Type="{x:Type x:String}">
+                    <x:String>Apples</x:String>
+                    <x:String>Bananas</x:String>
+                    <x:String>Oranges</x:String>
+                </x:Array>
+            </CollectionView.ItemsSource>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <SwipeView>
+                        <SwipeView.RightItems>
+                            <SwipeItem Text="Delete"
+                                       BackgroundColor="Red"/>
+                        </SwipeView.RightItems>
+                        <Grid Padding="3, 5">
+                            <Border
+                                Padding="16, 16"
+                                Stroke="#227DB6"
+                                StrokeShape="RoundRectangle 40,40,40,40"
+                                >
+                                <Label 
+                                    Text="{Binding .}"
+                                    FontSize="24"/>
+                            </Border>
+                        </Grid>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button
+            Grid.Column="0"
+            Grid.Row="2"
+            Text="Add Entry"
+            />
+        <Button
+            Grid.Column="1"
+            Grid.Row="2"
+            Text="Delete Entry"
+            />
+    </Grid>
+
 </ContentPage>
