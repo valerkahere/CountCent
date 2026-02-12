@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CountCent.ViewModel
+namespace CountCent.Model
 {
-    class MainViewModel
+    public class Entry
     {
     }
 }
