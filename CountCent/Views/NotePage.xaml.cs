@@ -3,55 +3,61 @@ using Microsoft.Maui.Storage;
 
 namespace CountCent.Views
 {
+    [QueryProperty(nameof(ItemId), nameof(ItemId))]
     public partial class NotePage : ContentPage
     {
-        // Represents the name of the file
-        string _fileName = Path.Combine(FileSystem.AppDataDirectory, "notes.txt");
+        static string appDataPath = FileSystem.AppDataDirectory;
+
+        // with get; gives CS8652
+        public string ItemId
+        {
+            set { LoadNote(value); }
+        }
+
+
         public NotePage()
         {
             InitializeComponent();
 
             // If file already exists
             // Include its contents into Editor
-            string appDataPath = FileSystem.AppDataDirectory;
+            
             string randomFileName = $"{Path.GetRandomFileName()}.notes.txt";
 
-            LoadNotePage(Path.Combine(appDataPath, randomFileName));
+            LoadNote(Path.Combine(appDataPath, randomFileName));
 
            
         }
 
-        private void SaveButton_Clicked(object sender, EventArgs e)
+        private async void SaveButton_Clicked(object sender, EventArgs e)
         {
-            // Save the file
-            File.WriteAllText(_fileName, TextEditor.Text);
+            if (BindingContext is Models.Note note)
+            {
+                note.Filename = $"{Path.GetRandomFileName()}.notes.txt";
+                File.WriteAllText(note.Filename, TextEditor.Text);
+            }
+                
+            // navigate to previous page
+            await Shell.Current.GoToAsync("..");
         }
 
-        private void DeleteButton_Clicked(Object sender, EventArgs e)
+        private async void DeleteButton_Clicked(object sender, EventArgs e)
         {
-            // Delete the file
-            if (File.Exists(_fileName))
+            if (BindingContext is Models.Note note)
             {
-                File.Delete(_fileName);
+                // Delete the file.
+                if (File.Exists(note.Filename))
+                {
+                    File.Delete(note.Filename);
+                }
             }
 
-            TextEditor.Text = string.Empty;
-
+            await Shell.Current.GoToAsync("..");
         }
 
-        private void LoadNotePage(string filename)
+        private void LoadNote(string filename)
         {
-            Note noteModel = new Note();
-            noteModel.Filename = filename;
-            // If file already exists
-            // Include its contents into the Model
-            if (File.Exists(filename))
-            {
-                noteModel.Text = File.ReadAllText(filename);
-
-                // Update the Model with the date the file was created
-                noteModel.Date = File.GetCreationTime(filename);
-            }
+            Note noteModel = new Note(filename);
 
             BindingContext = noteModel;
         }
