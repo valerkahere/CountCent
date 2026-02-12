@@ -19,8 +19,8 @@
             Route="AboutPage" />
 
         <ShellContent
-            Title="Settings"
-            ContentTemplate="{DataTemplate views:Settings}"
-            Route="Settings" />
+            Title="Note"
+            ContentTemplate="{DataTemplate views:NotePage}"
+            Route="NotePage" />
     </TabBar>
 </Shell>
