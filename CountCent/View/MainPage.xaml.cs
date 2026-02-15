@@ -31,8 +31,59 @@ namespace CountCent
                     );
             }
 
+            UpdateItemsSource();
+        }
+
+
+        // Add DataPoint
+        private void Button_Clicked(object sender, EventArgs e)
+        {
+            // Get Entry value
+            // Check not null
+            // Add to the list
+            // Update the items source with the list
+
+            //string dataPoint = ent__main.SelectedItem as string;
+        }
+
+        
+
+        private void ent__main_Completed(object sender, EventArgs e)
+        {
+
+            // To ensure you get the current value, cast the sender object to an Entry within the handler. This is more reliable than using the name ent__main directly: 
+
+            if (sender is Entry entry)
+            {
+                // returns left if not null, otherwise returns right
+                string amount = entry.Text ?? string.Empty;
+                decimal amountConverted = Convert.ToDecimal(amount);
+
+                dataPoints.Add(
+                    new DataPoint(amountConverted)
+                    );
+
+                UpdateItemsSource();
+            }
+        }
+
+        private void UpdateItemsSource()
+        {
+            clc__mainScreen.ItemsSource = null;
             clc__mainScreen.ItemsSource = dataPoints;
         }
 
+        private void btn__Save_Clicked(object sender, EventArgs e)
+        {
+            // convert to a string, then write to a file
+            string toWrite = string.Empty;
+            foreach (var item in dataPoints)
+            {
+                toWrite += item.ToString();
+            }
+            
+
+            File.WriteAllText(Path.Combine($"{FileSystem.AppDataDirectory}", "test.txt"), toWrite);
+        }
     }
 }

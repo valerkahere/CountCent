@@ -5,7 +5,7 @@
     x:Class="CountCent.MainPage">
 
     <Grid
-        RowDefinitions="100, Auto, Auto, Auto"
+        RowDefinitions="100, Auto, Auto, Auto, Auto"
         ColumnDefinitions="*, *"
         Padding="10"
         RowSpacing="10"
@@ -17,7 +17,9 @@
             />
 
         <Entry
-            Placeholder="Enter task"
+            x:Name="ent__main"
+            Completed="ent__main_Completed"
+            Placeholder="Add Entry (press enter to complete)"
             Grid.Row="0"
             Grid.ColumnSpan="2" />
 
@@ -56,11 +58,19 @@
         <Button
             Grid.Column="0"
             Grid.Row="3"
-            Text="Add Entry" />
+            Text="Add Entry"
+            Clicked="Button_Clicked"/>
         <Button
             Grid.Column="1"
             Grid.Row="3"
             Text="Delete Entry" />
+
+        <Button
+            x:Name="btn__Save"
+            Grid.ColumnSpan="2"
+            Grid.Row="4"
+            Text="Save to a file"
+            Clicked="btn__Save_Clicked"/>
     </Grid>
 
 </ContentPage>

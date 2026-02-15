@@ -11,6 +11,12 @@
             Date = DateTime.Now;
         }
 
+        public DataPoint(decimal amount)
+        {
+            Amount = amount;
+            Date = DateTime.Now;
+        }
+
         public DataPoint(decimal amount, DateTime date)
         {
             Amount = amount;
