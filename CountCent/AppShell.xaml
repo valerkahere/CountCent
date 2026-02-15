@@ -8,6 +8,7 @@
 
     <TabBar>
         <ShellContent
+            SemanticProperties.Description="Home"
             Title="CountCent"
             ContentTemplate="{DataTemplate local:MainPage}"
             Route="MainPage" />
