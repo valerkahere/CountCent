@@ -14,7 +14,6 @@
 
         <Label 
             x:Name="lbl_day"
-            Text=""
             />
 
         <Entry
@@ -23,16 +22,13 @@
             Grid.ColumnSpan="2" />
 
         <CollectionView
+            x:Name="clc__mainScreen"
             Grid.Row="1"
             Grid.ColumnSpan="2">
-            <CollectionView.ItemsSource>
-                <x:Array
-                    Type="{x:Type x:String}">
-                    <x:String>Apples</x:String>
-                    <x:String>Bananas</x:String>
-                    <x:String>Oranges</x:String>
-                </x:Array>
-            </CollectionView.ItemsSource>
+            <!-- 
+                CollectionView.ItemsSource removed
+                will be inserted through MainPage.xaml.cs
+            -->
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <SwipeView>
