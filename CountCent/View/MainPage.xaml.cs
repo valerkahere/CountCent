@@ -79,7 +79,7 @@ namespace CountCent
             string toWrite = string.Empty;
             foreach (var item in dataPoints)
             {
-                toWrite += item.ToString();
+                toWrite += $"{item.ToString()}\n";
             }
             
 
