@@ -1,10 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace CountCent
+﻿namespace CountCent
 {
     public partial class App : Application
     {
-        public App()
+        // designate as initial page for our application
+        public App(MainPage mainPage)
         {
             InitializeComponent();
 
