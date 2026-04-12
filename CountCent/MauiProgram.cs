@@ -19,6 +19,7 @@ namespace CountCent
             // transient dependency service
             // with this DIed, we can now assign the main page prop
             builder.Services.AddTransient<MainPage>();
+            builder.Services.AddTransient<AnalysisPage>();
 
             // inject LocalDbService as a singleton depedency service
             builder.Services.AddSingleton<LocalDbService>();

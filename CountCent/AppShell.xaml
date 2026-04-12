@@ -7,10 +7,17 @@
     Title="CountCent">
 
     <TabBar>
-        <ShellContent
-            SemanticProperties.Description="Home"
-            Title="CountCent"
-            ContentTemplate="{DataTemplate local:MainPage}"
-            Route="MainPage" />
+        <Tab Title="Home" SemanticProperties.Description="Main page">
+            <ShellContent
+                Title="Home"
+                ContentTemplate="{DataTemplate local:MainPage}"
+                Route="MainPage" />
+        </Tab>
+        <Tab Title="Analysis" SemanticProperties.Description="Analysis view">
+            <ShellContent
+                Title="Analysis"
+                ContentTemplate="{DataTemplate local:AnalysisPage}"
+                Route="AnalysisPage" />
+        </Tab>
     </TabBar>
 </Shell>

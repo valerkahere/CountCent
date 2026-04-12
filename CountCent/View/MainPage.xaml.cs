@@ -8,59 +8,34 @@ namespace CountCent
 {
     public partial class MainPage : ContentPage
     {
-        // create db service
         private readonly LocalDbService _LocalDbService;
+        static List<DataPoint> dataPoints = new List<DataPoint>();
+        
+        // Track current day view
+        private DateTime _selectedDate = DateTime.Today;
 
-
-        // assign to constructor
         public MainPage(LocalDbService localDbService)
         {
             InitializeComponent();
-
-            // instantiate it
             _LocalDbService = localDbService;
 
-            Task.Run(async () => clc__mainScreen.ItemsSource = await _LocalDbService.GetDataPoints());
+            // Load all. Filter to thread.
+            Task.Run(async () => {
+                var items = await _LocalDbService.GetDataPoints();
+                MainThread.BeginInvokeOnMainThread(() => {
+                    dataPoints = items;
+                    UpdateDateLabel();
+                    UpdateItemsSource();
+                });
+            });
         }
 
-
-        // This will store data throughout the program
-        static List<DataPoint> dataPoints = new List<DataPoint>();
-
-        // behaviour immediately prior to application becoming visible
-        //protected override void OnAppearing()
-        //{
-        //    // Get today's date, converts to date, to string (short date), and display it
-        //    lbl_day.Text = DateTime.Today.ToString("d");
-
-        //    // Populate with dummy (or existing) data
-        //    Random random = new Random();
-        //    for (int i = 0; i < 3; i++)
-        //    {
-        //        dataPoints.Add(
-        //            new DataPoint(
-        //                    random.Next(100, 100000),
-        //                    DateTime.UtcNow
-        //                )
-        //            );
-        //    }
-
-        //    UpdateItemsSource();
-        //}
-
-
-        // This represents DataPoint added from "Enter"
         private async void ent__main_Completed(object sender, EventArgs e)
         {
-
-            // To ensure you get the current value, cast the sender object to an Entry within the handler. This is more reliable than using the name ent__main directly: 
-
             if (sender is Entry entry)
             {
-                // returns left if not null, otherwise returns right
                 string amount = entry.Text ?? string.Empty;
 
-                // TryParse. Check if safe decimal. Stop crash.
                 if (!decimal.TryParse(amount, out decimal amountConverted))
                 {
                     lbl_errorMsg.Text = "Invalid amount. Numbers only.";
@@ -68,44 +43,66 @@ namespace CountCent
                     return;
                 }
 
-                // Input good. Hide error.
                 lbl_errorMsg.IsVisible = false;
 
-                DataPoint dataPoint = new DataPoint(amountConverted);
+                // Bind new point to currently selected date + time now
+                DateTime entryDate = _selectedDate.Date + DateTime.Now.TimeOfDay;
+                DataPoint dataPoint = new DataPoint(amountConverted, entryDate);
 
-                dataPoints.Add(
-                        dataPoint
-                    );
-
+                dataPoints.Add(dataPoint);
                 await _LocalDbService.Create(dataPoint);
+                
+                // Clear input
+                entry.Text = string.Empty;
 
                 UpdateItemsSource();
             }
         }
 
-        // This represents DataPoint added from clicking on Save button
-        //private async Task btn__SaveDataPoint_Clicked(object sender, EventArgs e)
-        //{
+        private void btn__PrevDay_Clicked(object sender, EventArgs e)
+        {
+            _selectedDate = _selectedDate.AddDays(-1);
+            UpdateDateLabel();
+            UpdateItemsSource();
+        }
 
+        private void btn__NextDay_Clicked(object sender, EventArgs e)
+        {
+            _selectedDate = _selectedDate.AddDays(1);
+            UpdateDateLabel();
+            UpdateItemsSource();
+        }
 
-
-        //}
+        private void UpdateDateLabel()
+        {
+            lbl_day.Text = _selectedDate.Date == DateTime.Today.Date 
+                ? "Today" 
+                : _selectedDate.ToString("ddd, MMM dd, yyyy");
+        }
 
         private void UpdateItemsSource()
         {
             clc__mainScreen.ItemsSource = null;
-            clc__mainScreen.ItemsSource = dataPoints;
+            
+            // Filter global list for selected day only
+            var dailyItems = dataPoints
+                .Where(dp => dp.Date.Date == _selectedDate.Date)
+                .OrderByDescending(dp => dp.Date)
+                .ToList();
+
+            clc__mainScreen.ItemsSource = dailyItems;
+
+            // Calculate exact total for this day
+            decimal dailyTotal = dailyItems.Sum(x => x.Amount);
+            lbl_dailyTotal.Text = $"Daily Total: {dailyTotal:C}";
         }
 
         private void btn__ExportToFile_Clicked(object sender, EventArgs e)
         {
-            // Use "yyyy-MM-dd" for easy sorting in file explorers
             string dateString = DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss");
-
-            string filePath = Path.Combine($"{FileSystem.AppDataDirectory}", $"CountCent Export {dateString}.csv");
+            string filePath = Path.Combine(FileSystem.AppDataDirectory, $"CountCent Export {dateString}.csv");
             WriteToCsv(filePath);
         }
-
 
         // Helper methods
 

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="CountCent.AnalysisPage"
+    Title="Analysis">
+
+    <StackLayout
+        VerticalOptions="Center"
+        HorizontalOptions="Center"
+        Spacing="40"
+        Padding="20"
+        MaximumWidthRequest="500">
+
+        <Label
+            Text="All Time Analysis"
+            FontSize="28"
+            FontAttributes="Bold"
+            HorizontalOptions="Center" />
+
+        <Border
+            Padding="20"
+            Stroke="#227DB6"
+            StrokeShape="RoundRectangle 20,20,20,20"
+            BackgroundColor="#1A227DB6">
+            <StackLayout Spacing="10">
+                <Label Text="Total Spent (All Time)" FontSize="20" HorizontalOptions="Center" />
+                <Label x:Name="lbl_AllTimeTotal" Text="$0.00" FontSize="36" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#227DB6" />
+            </StackLayout>
+        </Border>
+
+        <Border
+            Padding="20"
+            Stroke="#227DB6"
+            StrokeShape="RoundRectangle 20,20,20,20"
+            BackgroundColor="#1A227DB6">
+            <StackLayout Spacing="10">
+                <Label Text="Average Expense / Day" FontSize="20" HorizontalOptions="Center" />
+                <Label x:Name="lbl_AvgPerDay" Text="$0.00" FontSize="36" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#227DB6" />
+            </StackLayout>
+        </Border>
+
+    </StackLayout>
+
+</ContentPage>

@@ -5,40 +5,43 @@
     x:Class="CountCent.MainPage">
 
     <Grid
-        RowDefinitions="100, Auto, Auto, Auto, Auto"
+        RowDefinitions="Auto, Auto, Auto, *, Auto, Auto, Auto"
         ColumnDefinitions="*, *"
         Padding="10"
         RowSpacing="10"
         ColumnSpacing="10"
         MaximumWidthRequest="1000">
 
-        <Label 
-            x:Name="lbl_day"
-            />
+        <!-- Date Navigator -->
+        <Grid
+            Grid.Row="0"
+            Grid.ColumnSpan="2"
+            ColumnDefinitions="Auto, *, Auto"
+            VerticalOptions="Center"
+            Padding="0, 10">
+            <Button x:Name="btn__PrevDay" Text="&lt;" Clicked="btn__PrevDay_Clicked" Grid.Column="0" FontAttributes="Bold" />
+            <Label x:Name="lbl_day" Text="Today" Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" FontSize="20" FontAttributes="Bold" />
+            <Button x:Name="btn__NextDay" Text="&gt;" Clicked="btn__NextDay_Clicked" Grid.Column="2" FontAttributes="Bold" />
+        </Grid>
 
         <Entry
             x:Name="ent__main"
             Completed="ent__main_Completed"
             Placeholder="Add Entry (press enter to complete)"
-            Grid.Row="0"
+            Grid.Row="1"
             Grid.ColumnSpan="2" />
 
-        <!-- Error label new -->
         <Label
             x:Name="lbl_errorMsg"
             TextColor="Red"
             IsVisible="False"
-            Grid.Row="1"
+            Grid.Row="2"
             Grid.ColumnSpan="2" />
 
         <CollectionView
             x:Name="clc__mainScreen"
-            Grid.Row="2"
+            Grid.Row="3"
             Grid.ColumnSpan="2">
-            <!-- 
-                CollectionView.ItemsSource removed
-                will be inserted through MainPage.xaml.cs
-            -->
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <SwipeView>
@@ -63,20 +66,30 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
+        <Label
+            x:Name="lbl_dailyTotal"
+            Grid.Row="4"
+            Grid.ColumnSpan="2"
+            Text="Daily Total: $0.00"
+            FontSize="22"
+            FontAttributes="Bold"
+            HorizontalOptions="Center"
+            TextColor="#227DB6" />
+
         <Button
             x:Name="btn__SaveDataPoint"
             Grid.Column="0"
-            Grid.Row="3"
+            Grid.Row="5"
             Text="Add Entry" />
         <Button
             Grid.Column="1"
-            Grid.Row="3"
+            Grid.Row="5"
             Text="Delete Entry" />
 
         <Button
             x:Name="btn__ExportToFile"
             Grid.ColumnSpan="2"
-            Grid.Row="4"
+            Grid.Row="6"
             Text="Export to a file"
             Clicked="btn__ExportToFile_Clicked"/>
     </Grid>
