@@ -60,8 +60,16 @@ namespace CountCent
                 // returns left if not null, otherwise returns right
                 string amount = entry.Text ?? string.Empty;
 
+                // TryParse. Check if safe decimal. Stop crash.
+                if (!decimal.TryParse(amount, out decimal amountConverted))
+                {
+                    lbl_errorMsg.Text = "Invalid amount. Numbers only.";
+                    lbl_errorMsg.IsVisible = true;
+                    return;
+                }
 
-                decimal amountConverted = Convert.ToDecimal(amount);
+                // Input good. Hide error.
+                lbl_errorMsg.IsVisible = false;
 
                 DataPoint dataPoint = new DataPoint(amountConverted);
 

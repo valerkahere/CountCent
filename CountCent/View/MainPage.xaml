@@ -23,9 +23,17 @@
             Grid.Row="0"
             Grid.ColumnSpan="2" />
 
+        <!-- Error label new -->
+        <Label
+            x:Name="lbl_errorMsg"
+            TextColor="Red"
+            IsVisible="False"
+            Grid.Row="1"
+            Grid.ColumnSpan="2" />
+
         <CollectionView
             x:Name="clc__mainScreen"
-            Grid.Row="1"
+            Grid.Row="2"
             Grid.ColumnSpan="2">
             <!-- 
                 CollectionView.ItemsSource removed
