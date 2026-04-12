@@ -55,11 +55,11 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <!--<Button
+        <Button
+            x:Name="btn__SaveDataPoint"
             Grid.Column="0"
             Grid.Row="3"
-            Text="Add Entry"
-            Clicked="Button_Clicked"/>-->
+            Text="Add Entry" />
         <Button
             Grid.Column="1"
             Grid.Row="3"

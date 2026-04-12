@@ -11,7 +11,6 @@ namespace CountCent
         // create db service
         private readonly LocalDbService _LocalDbService;
 
-        private int _editDataPointId;
 
         // assign to constructor
         public MainPage(LocalDbService localDbService)
@@ -50,7 +49,8 @@ namespace CountCent
         //}
 
 
-        private void ent__main_Completed(object sender, EventArgs e)
+        // This represents DataPoint added from "Enter"
+        private async void ent__main_Completed(object sender, EventArgs e)
         {
 
             // To ensure you get the current value, cast the sender object to an Entry within the handler. This is more reliable than using the name ent__main directly: 
@@ -59,15 +59,29 @@ namespace CountCent
             {
                 // returns left if not null, otherwise returns right
                 string amount = entry.Text ?? string.Empty;
+
+
                 decimal amountConverted = Convert.ToDecimal(amount);
 
+                DataPoint dataPoint = new DataPoint(amountConverted);
+
                 dataPoints.Add(
-                    new DataPoint(amountConverted)
+                        dataPoint
                     );
+
+                await _LocalDbService.Create(dataPoint);
 
                 UpdateItemsSource();
             }
         }
+
+        // This represents DataPoint added from clicking on Save button
+        //private async Task btn__SaveDataPoint_Clicked(object sender, EventArgs e)
+        //{
+
+
+
+        //}
 
         private void UpdateItemsSource()
         {
@@ -116,5 +130,7 @@ namespace CountCent
                 Console.WriteLine($"Error occured: {ex.Message}");
             }
         }
+
+
     }
 }
