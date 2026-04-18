@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="CountCent.MainPage">
-
     <Grid
         RowDefinitions="Auto, Auto, Auto, Auto, *, Auto, Auto, Auto"
         ColumnDefinitions="*, *"
@@ -54,15 +53,19 @@
 
         <CollectionView
             x:Name="clc__mainScreen"
+            SelectionMode="Single"
             Grid.Row="4"
             Grid.ColumnSpan="2">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <SwipeView>
+                        <!-- Update SwipeItem to fire event and pass data -->
                         <SwipeView.RightItems>
                             <SwipeItem
                                 Text="Delete"
-                                BackgroundColor="Red" />
+                                BackgroundColor="Red"
+                                CommandParameter="{Binding .}"
+                                Invoked="SwipeItem_Delete_Invoked" />
                         </SwipeView.RightItems>
                         <Grid Padding="3, 5">
                             <Border
@@ -93,9 +96,11 @@
             Grid.Row="6"
             Text="Add Entry" />
         <Button
+            x:Name="btn__DeleteEntry"
             Grid.Column="1"
             Grid.Row="6"
-            Text="Delete Entry" />
+            Text="Delete Entry"
+            Clicked="btn__DeleteEntry_Clicked" />
 
         <Button
             x:Name="btn__ExportToFile"

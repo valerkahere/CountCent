@@ -158,5 +158,42 @@ namespace CountCent
                 Console.WriteLine($"Error occured: {ex.Message}");
             }
         }
+        // DELETE LOGIC 
+
+        private async void btn__DeleteEntry_Clicked(object sender, EventArgs e)
+        {
+            if (clc__mainScreen.SelectedItem is DataPoint dp)
+            {
+                await ProcessDelete(dp);
+            }
+            else
+            {
+                // Notify the user if no item is selected
+                await DisplayAlert("No Selection", "Please tap an entry to select it before deleting.", "OK");
+            }
+        }
+
+        private async void SwipeItem_Delete_Invoked(object sender, EventArgs e)
+        {
+            if (sender is SwipeItem swipeItem && swipeItem.CommandParameter is DataPoint dp)
+            {
+                await ProcessDelete(dp);
+            }
+        }
+
+        private async Task ProcessDelete(DataPoint dp)
+        {
+            // Remove from DB
+            await _LocalDbService.Delete(dp);
+            
+            // Remove from local list
+            dataPoints.Remove(dp);
+            
+            // Clear selection. Prevent crash.
+            clc__mainScreen.SelectedItem = null;
+            
+            // Refresh UI list and totals
+            UpdateItemsSource();
+        }
     }
 }
