@@ -14,6 +14,7 @@ namespace CountCent
         
         // Track current day view
         private DateTime _selectedDate = DateTime.Today;
+        private string _lastExportedFilePath;
 
         public MainPage(LocalDbService localDbService, CurrencyService currencyService)
         {
@@ -124,12 +125,31 @@ namespace CountCent
         {
             string dateString = DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss");
             string filePath = Path.Combine(FileSystem.AppDataDirectory, $"CountCent Export {dateString}.csv");
-            WriteToCsv(filePath);
+            
+            bool success = WriteToCsv(filePath);
+            
+            if (success)
+            {
+                _lastExportedFilePath = filePath;
+                btn__OpenExported.IsVisible = true; // Show open button
+            }
+        }
+
+        private async void btn__OpenExported_Clicked(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(_lastExportedFilePath) || !File.Exists(_lastExportedFilePath))
+            {
+                await DisplayAlert("Error", "File not found.", "OK");
+                return;
+            }
+
+            // Launch native file opener/sharing UI
+            await Launcher.Default.OpenAsync(new OpenFileRequest("CountCent Export", new ReadOnlyFile(_lastExportedFilePath)));
         }
 
         // Helper methods
 
-        static void WriteToCsv(string filePath)
+        static bool WriteToCsv(string filePath)
         {
             try
             {
@@ -152,10 +172,13 @@ namespace CountCent
                 // Use a lowerCamelCase variable name to avoid conflicting with the CsvWriter class type
                 using var csvWriter = new CsvWriter(writer, configWrite);
                 csvWriter.WriteRecords(dataPoints);
+
+                return true; // Success
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error occured: {ex.Message}");
+                return false; // Fail
             }
         }
         // DELETE LOGIC 

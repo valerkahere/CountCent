@@ -108,5 +108,12 @@
             Grid.Row="7"
             Text="Export to a file"
             Clicked="btn__ExportToFile_Clicked"/>
+
+        <Button
+            x:Name="btn__OpenExported"
+            Grid.ColumnSpan="2"
+            Grid.Row="8"
+            Text="Open Exported Data"
+            Clicked="btn__OpenExported_Clicked" />
     </Grid>
 </ContentPage>
