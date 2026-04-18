@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-	<application android:allowBackup="true" android:icon="@mipmap/appicon" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true"></application>
+	<!--While targeting Android devices (such as with .NET MAUI development), you must add the android:usesCleartextTraffic="true" definition to the <application></application> section in the AndroidManifest.xml file. This setting enables clear-text traffic, such as HTTP requests, which is otherwise disabled by default due to Android security policies. Consider the following example XML settings:-->
+	<application
+		android:usesCleartextTraffic="true"
+		android:allowBackup="true" android:icon="@mipmap/appicon" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true"></application>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
 </manifest>

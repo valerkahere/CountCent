@@ -16,13 +16,18 @@ namespace CountCent
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            // transient dependency service
-            // with this DIed, we can now assign the main page prop
+            // UI pages
             builder.Services.AddTransient<MainPage>();
             builder.Services.AddTransient<AnalysisPage>();
 
-            // inject LocalDbService as a singleton depedency service
+            // DB Service
             builder.Services.AddSingleton<LocalDbService>();
+
+            //  HttpClient setup for Frankfurter API
+            builder.Services.AddHttpClient<CurrencyService>(client =>
+            {
+                client.BaseAddress = new Uri("https://api.frankfurter.dev/v1/");
+            });
 
 #if DEBUG
             builder.Logging.AddDebug();

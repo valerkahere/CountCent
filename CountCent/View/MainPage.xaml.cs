@@ -9,24 +9,48 @@ namespace CountCent
     public partial class MainPage : ContentPage
     {
         private readonly LocalDbService _LocalDbService;
+        private readonly CurrencyService _CurrencyService;
         static List<DataPoint> dataPoints = new List<DataPoint>();
         
         // Track current day view
         private DateTime _selectedDate = DateTime.Today;
 
-        public MainPage(LocalDbService localDbService)
+        public MainPage(LocalDbService localDbService, CurrencyService currencyService)
         {
             InitializeComponent();
             _LocalDbService = localDbService;
+            _CurrencyService = currencyService;
 
-            // Load all. Filter to thread.
-            Task.Run(async () => {
+            // Load db data
+            Task.Run(async () =>
+            {
                 var items = await _LocalDbService.GetDataPoints();
-                MainThread.BeginInvokeOnMainThread(() => {
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
                     dataPoints = items;
                     UpdateDateLabel();
                     UpdateItemsSource();
                 });
+            });
+
+            // Load API rates
+            LoadExchangeRates();
+        }
+
+        private async void LoadExchangeRates()
+        {
+            // Base API assumes EUR. Fetch 1 EUR equiv.
+            decimal usd = await _CurrencyService.ConvertAmountAsync(1m, "USD");
+            decimal gbp = await _CurrencyService.ConvertAmountAsync(1m, "GBP");
+            decimal jpy = await _CurrencyService.ConvertAmountAsync(1m, "JPY");
+            decimal chf = await _CurrencyService.ConvertAmountAsync(1m, "CHF");
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                lbl_usd.Text = $"USD {usd:F2}";
+                lbl_gbp.Text = $"GBP {gbp:F2}";
+                lbl_jpy.Text = $"JPY {jpy:F2}";
+                lbl_chf.Text = $"CHF {chf:F2}";
             });
         }
 
@@ -51,10 +75,9 @@ namespace CountCent
 
                 dataPoints.Add(dataPoint);
                 await _LocalDbService.Create(dataPoint);
-                
+
                 // Clear input
                 entry.Text = string.Empty;
-
                 UpdateItemsSource();
             }
         }
@@ -75,15 +98,15 @@ namespace CountCent
 
         private void UpdateDateLabel()
         {
-            lbl_day.Text = _selectedDate.Date == DateTime.Today.Date 
-                ? "Today" 
+            lbl_day.Text = _selectedDate.Date == DateTime.Today.Date
+                ? "Today"
                 : _selectedDate.ToString("ddd, MMM dd, yyyy");
         }
 
         private void UpdateItemsSource()
         {
             clc__mainScreen.ItemsSource = null;
-            
+
             // Filter global list for selected day only
             var dailyItems = dataPoints
                 .Where(dp => dp.Date.Date == _selectedDate.Date)
@@ -135,7 +158,5 @@ namespace CountCent
                 Console.WriteLine($"Error occured: {ex.Message}");
             }
         }
-
-
     }
 }
