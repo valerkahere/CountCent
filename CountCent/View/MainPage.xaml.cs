@@ -164,7 +164,8 @@ namespace CountCent
         {
             if (clc__mainScreen.SelectedItem is DataPoint dp)
             {
-                await ProcessDelete(dp);
+                // Call wrapper instead
+                await TryProcessDelete(dp);
             }
             else
             {
@@ -177,8 +178,35 @@ namespace CountCent
         {
             if (sender is SwipeItem swipeItem && swipeItem.CommandParameter is DataPoint dp)
             {
-                await ProcessDelete(dp);
+                // Call wrapper instead
+                await TryProcessDelete(dp);
             }
+        }
+
+        // New confirmation wrapper
+        private async Task TryProcessDelete(DataPoint dp)
+        {
+            // Check saved preference
+            bool skipConfirm = Preferences.Default.Get("SkipDeleteConfirm", false);
+            
+            if (!skipConfirm)
+            {
+                // 3 options. Cancel is native bottom button.
+                string action = await DisplayActionSheet("Confirm Delete", "Cancel", null, "Delete", "Delete (Don't ask again)");
+                
+                // Abort if cancel or tap outside
+                if (action == "Cancel" || string.IsNullOrEmpty(action)) 
+                    return;
+                
+                // Save preference if chosen
+                if (action == "Delete (Don't ask again)")
+                {
+                    Preferences.Default.Set("SkipDeleteConfirm", true);
+                }
+            }
+
+            // Proceed to existing logic
+            await ProcessDelete(dp);
         }
 
         private async Task ProcessDelete(DataPoint dp)
