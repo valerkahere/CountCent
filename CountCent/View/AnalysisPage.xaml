@@ -24,7 +24,7 @@
             StrokeShape="RoundRectangle 20,20,20,20"
             BackgroundColor="#1A227DB6">
             <StackLayout Spacing="10">
-                <Label Text="Total Spent (All Time)" FontSize="20" HorizontalOptions="Center" />
+                <Label Text="Total Funds (All Time)" FontSize="20" HorizontalOptions="Center" />
                 <Label x:Name="lbl_AllTimeTotal" Text="$0.00" FontSize="36" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#227DB6" />
             </StackLayout>
         </Border>
@@ -35,7 +35,7 @@
             StrokeShape="RoundRectangle 20,20,20,20"
             BackgroundColor="#1A227DB6">
             <StackLayout Spacing="10">
-                <Label Text="Average Expense / Day" FontSize="20" HorizontalOptions="Center" />
+                <Label Text="Average Funds / Day" FontSize="20" HorizontalOptions="Center" />
                 <Label x:Name="lbl_AvgPerDay" Text="$0.00" FontSize="36" FontAttributes="Bold" HorizontalOptions="Center" TextColor="#227DB6" />
             </StackLayout>
         </Border>

@@ -3,8 +3,9 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="CountCent.MainPage">
+    <!-- Add extra Auto for Row 8 -->
     <Grid
-        RowDefinitions="Auto, Auto, Auto, Auto, *, Auto, Auto, Auto"
+        RowDefinitions="Auto, Auto, Auto, Auto, *, Auto, Auto, Auto, Auto"
         ColumnDefinitions="*, *"
         Padding="10"
         RowSpacing="10"

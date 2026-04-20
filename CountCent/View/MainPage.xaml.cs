@@ -8,14 +8,18 @@ namespace CountCent
 {
     public partial class MainPage : ContentPage
     {
+        // instances of the services
         private readonly LocalDbService _LocalDbService;
         private readonly CurrencyService _CurrencyService;
+
+        // Stores all Data Points (entries with amount and timestamp)
         static List<DataPoint> dataPoints = new List<DataPoint>();
-        
+
         // Track current day view
         private DateTime _selectedDate = DateTime.Today;
         private string _lastExportedFilePath;
 
+        // Happens on load
         public MainPage(LocalDbService localDbService, CurrencyService currencyService)
         {
             InitializeComponent();
@@ -55,6 +59,25 @@ namespace CountCent
             });
         }
 
+        // UI update method
+        private void UpdateItemsSource()
+        {
+            clc__mainScreen.ItemsSource = null;
+
+            // Filter global list for selected day only
+            var dailyItems = dataPoints
+                .Where(dp => dp.Date.Date == _selectedDate.Date)
+                .OrderByDescending(dp => dp.Date)
+                .ToList();
+
+            clc__mainScreen.ItemsSource = dailyItems;
+
+            // Calculate exact total for this day
+            decimal dailyTotal = dailyItems.Sum(x => x.Amount);
+            lbl_dailyTotal.Text = $"Daily Total: {dailyTotal:C}";
+        }
+
+        // When entry is completed (entered)
         private async void ent__main_Completed(object sender, EventArgs e)
         {
             if (sender is Entry entry)
@@ -83,6 +106,7 @@ namespace CountCent
             }
         }
 
+        #region Button logic
         private void btn__PrevDay_Clicked(object sender, EventArgs e)
         {
             _selectedDate = _selectedDate.AddDays(-1);
@@ -104,30 +128,15 @@ namespace CountCent
                 : _selectedDate.ToString("ddd, MMM dd, yyyy");
         }
 
-        private void UpdateItemsSource()
-        {
-            clc__mainScreen.ItemsSource = null;
 
-            // Filter global list for selected day only
-            var dailyItems = dataPoints
-                .Where(dp => dp.Date.Date == _selectedDate.Date)
-                .OrderByDescending(dp => dp.Date)
-                .ToList();
-
-            clc__mainScreen.ItemsSource = dailyItems;
-
-            // Calculate exact total for this day
-            decimal dailyTotal = dailyItems.Sum(x => x.Amount);
-            lbl_dailyTotal.Text = $"Daily Total: {dailyTotal:C}";
-        }
 
         private void btn__ExportToFile_Clicked(object sender, EventArgs e)
         {
             string dateString = DateTime.UtcNow.ToString("yyyy-MM-dd_HH-mm-ss");
             string filePath = Path.Combine(FileSystem.AppDataDirectory, $"CountCent Export {dateString}.csv");
-            
+
             bool success = WriteToCsv(filePath);
-            
+
             if (success)
             {
                 _lastExportedFilePath = filePath;
@@ -147,7 +156,77 @@ namespace CountCent
             await Launcher.Default.OpenAsync(new OpenFileRequest("CountCent Export", new ReadOnlyFile(_lastExportedFilePath)));
         }
 
-        // Helper methods
+        #endregion
+
+        #region DELETE LOGIC 
+
+        private async void btn__DeleteEntry_Clicked(object sender, EventArgs e)
+        {
+            if (clc__mainScreen.SelectedItem is DataPoint dp)
+            {
+                // Call wrapper instead
+                await TryProcessDelete(dp);
+            }
+            else
+            {
+                // Notify the user if no item is selected
+                await DisplayAlert("No Selection", "Please tap an entry to select it before deleting.", "OK");
+            }
+        }
+
+        private async void SwipeItem_Delete_Invoked(object sender, EventArgs e)
+        {
+            if (sender is SwipeItem swipeItem && swipeItem.CommandParameter is DataPoint dp)
+            {
+                // Call wrapper instead
+                await TryProcessDelete(dp);
+            }
+        }
+
+        // New confirmation wrapper
+        private async Task TryProcessDelete(DataPoint dp)
+        {
+            // Check saved preference
+            bool skipConfirm = Preferences.Default.Get("SkipDeleteConfirm", false);
+
+            if (!skipConfirm)
+            {
+                // 3 options. Cancel is native bottom button.
+                string action = await DisplayActionSheet("Confirm Delete", "Cancel", null, "Delete", "Delete (Don't ask again)");
+
+                // Abort if cancel or tap outside
+                if (action == "Cancel" || string.IsNullOrEmpty(action))
+                    return;
+
+                // Save preference if chosen
+                if (action == "Delete (Don't ask again)")
+                {
+                    Preferences.Default.Set("SkipDeleteConfirm", true);
+                }
+            }
+
+            // Proceed to existing logic
+            await ProcessDelete(dp);
+        }
+
+        private async Task ProcessDelete(DataPoint dp)
+        {
+            // Remove from DB
+            await _LocalDbService.Delete(dp);
+
+            // Remove from local list
+            dataPoints.Remove(dp);
+
+            // Clear selection. Prevent crash.
+            clc__mainScreen.SelectedItem = null;
+
+            // Refresh UI list and totals
+            UpdateItemsSource();
+        }
+
+        #endregion 
+
+        // Writing to CSV file method
 
         static bool WriteToCsv(string filePath)
         {
@@ -181,70 +260,6 @@ namespace CountCent
                 return false; // Fail
             }
         }
-        // DELETE LOGIC 
 
-        private async void btn__DeleteEntry_Clicked(object sender, EventArgs e)
-        {
-            if (clc__mainScreen.SelectedItem is DataPoint dp)
-            {
-                // Call wrapper instead
-                await TryProcessDelete(dp);
-            }
-            else
-            {
-                // Notify the user if no item is selected
-                await DisplayAlert("No Selection", "Please tap an entry to select it before deleting.", "OK");
-            }
-        }
-
-        private async void SwipeItem_Delete_Invoked(object sender, EventArgs e)
-        {
-            if (sender is SwipeItem swipeItem && swipeItem.CommandParameter is DataPoint dp)
-            {
-                // Call wrapper instead
-                await TryProcessDelete(dp);
-            }
-        }
-
-        // New confirmation wrapper
-        private async Task TryProcessDelete(DataPoint dp)
-        {
-            // Check saved preference
-            bool skipConfirm = Preferences.Default.Get("SkipDeleteConfirm", false);
-            
-            if (!skipConfirm)
-            {
-                // 3 options. Cancel is native bottom button.
-                string action = await DisplayActionSheet("Confirm Delete", "Cancel", null, "Delete", "Delete (Don't ask again)");
-                
-                // Abort if cancel or tap outside
-                if (action == "Cancel" || string.IsNullOrEmpty(action)) 
-                    return;
-                
-                // Save preference if chosen
-                if (action == "Delete (Don't ask again)")
-                {
-                    Preferences.Default.Set("SkipDeleteConfirm", true);
-                }
-            }
-
-            // Proceed to existing logic
-            await ProcessDelete(dp);
-        }
-
-        private async Task ProcessDelete(DataPoint dp)
-        {
-            // Remove from DB
-            await _LocalDbService.Delete(dp);
-            
-            // Remove from local list
-            dataPoints.Remove(dp);
-            
-            // Clear selection. Prevent crash.
-            clc__mainScreen.SelectedItem = null;
-            
-            // Refresh UI list and totals
-            UpdateItemsSource();
-        }
     }
 }
