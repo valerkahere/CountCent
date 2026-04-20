@@ -92,6 +92,7 @@ In summary, the CountCent app is a tool for users seeking a down-to-earth budget
 
 ## License & Acknowledgments
 **License:** MIT License
+
 **Acknowledgments:**
 - [Frankfurter API](https://frankfurter.dev/) for open-source currency rates.
 - [CsvHelper](https://joshclose.github.io/CsvHelper/) for local data streaming.
