@@ -1,9 +1,10 @@
-
+
+
 # CountCent
 
-We all have desktop spreadsheets. Powerful apps for finances. But has anyone ever used it ìon the wayî, with a phone out of the pocket? Doesnít sound right, does it? 
+We all have desktop spreadsheets. Powerful apps for finances. But has anyone ever used it ‚Äúon the way‚Äù, with a phone out of the pocket? Doesn‚Äôt sound right, does it? 
 
-Thatís why there is **CountCent** ó a *simple, value-driven, personal finance tracking app for everyday use*, be it your PC, tablet or phone, at home in front of your desktop, or on the way to school ó this is the companion to make your financial life easier, not harder.  
+That‚Äôs why there is **CountCent** ‚Äî a *simple, value-driven, personal finance tracking app for everyday use*, be it your PC, tablet or phone, at home in front of your desktop, or on the way to school ‚Äî this is the companion to make your financial life easier, not harder.  
 
 
 In summary, the CountCent app is a tool for users seeking a down-to-earth budget tracking app with least friction possible to manage their finances responsibly. 
@@ -21,8 +22,8 @@ In summary, the CountCent app is a tool for users seeking a down-to-earth budget
 
 ## Features & Technologies Used
 **Main Features:**
-- Cross-platform: Use it on your laptop, tablet, or phone ó whatever suits you best 
-- Intuitive interface: You see that screen for the first time ó and you inherently know what to do. Find it tricky? Refer to our demo! 
+- Cross-platform: Use it on your laptop, tablet, or phone ‚Äî whatever suits you best 
+- Intuitive interface: You see that screen for the first time ‚Äî and you inherently know what to do. Find it tricky? Refer to our demo! 
 - Responsiveness on most screen sizes: A requirement, not a luxury in 2026
 - Track daily expenses by entering amounts.
 - Navigate through days using built-in date controls.
@@ -47,9 +48,13 @@ In summary, the CountCent app is a tool for users seeking a down-to-earth budget
 - .NET 9 SDK
 
 **Installation Steps:**
-1. Clone the repository:```bash
+1. Clone the repository:
+```bash
 
-   git clone https://github.com/valerkahere/CountCent.git```
+   git clone https://github.com/valerkahere/CountCent.git
+
+```
+
 2. Open `CountCent.sln` in Visual Studio 2022.
 3. Select your target emulator or local machine (Windows/Android).
 4. Build and Run (F5).
@@ -86,11 +91,12 @@ In summary, the CountCent app is a tool for users seeking a down-to-earth budget
 - Currency fallback defaults to 1:1 if the device is offline.
 
 ## License & Acknowledgments
-**License:** MIT License (or custom, depending on repository settings).  
+**License:** MIT License
 **Acknowledgments:**
 - [Frankfurter API](https://frankfurter.dev/) for open-source currency rates.
 - [CsvHelper](https://joshclose.github.io/CsvHelper/) for local data streaming.
 
 ## Contact/Support
-For support or bug reports, please open an Issue on the [GitHub Repository](https://github.com/valerkahere/CountCent/issues).
+For support or bug reports, please open an Issue on the [GitHub Repository](https://github.com/valerkahere/CountCent/issues).
+
 
