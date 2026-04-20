@@ -42,6 +42,7 @@ namespace CountCent
             LoadExchangeRates();
         }
 
+        // Uses CurrencyService
         private async void LoadExchangeRates()
         {
             // Base API assumes EUR. Fetch 1 EUR equiv.
@@ -58,6 +59,8 @@ namespace CountCent
                 lbl_chf.Text = $"CHF {chf:F2}";
             });
         }
+
+        #region Helper methods: UI update, Date update
 
         // UI update method
         private void UpdateItemsSource()
@@ -77,6 +80,18 @@ namespace CountCent
             lbl_dailyTotal.Text = $"Daily Total: {dailyTotal:C}";
         }
 
+        // Update Date Labels
+        private void UpdateDateLabel()
+        {
+            lbl_day.Text = _selectedDate.Date == DateTime.Today.Date
+                ? "Today"
+                : _selectedDate.ToString("ddd, MMM dd, yyyy");
+        }
+
+        #endregion
+
+        #region Adding an Entry: swipe, click
+
         // When entry is completed (entered)
         private async void ent__main_Completed(object sender, EventArgs e)
         {
@@ -86,7 +101,7 @@ namespace CountCent
 
                 if (!decimal.TryParse(amount, out decimal amountConverted))
                 {
-                    lbl_errorMsg.Text = "Invalid amount. Numbers only.";
+                    lbl_errorMsg.Text = "Invalid amount. Please enter numbers only.";
                     lbl_errorMsg.IsVisible = true;
                     return;
                 }
@@ -106,7 +121,44 @@ namespace CountCent
             }
         }
 
-        #region Button logic
+        // When Data point (Entry) is added using the button
+        private async void btn__SaveDataPoint_Clicked(object sender, EventArgs e)
+        {
+            if (sender is Button button)
+            {
+
+               
+
+                string amount = ent__main.Text ?? string.Empty;
+
+                if (!decimal.TryParse(amount, out decimal amountConverted))
+                {
+                    lbl_errorMsg.Text = "Invalid amount. Please enter numbers only.";
+                    lbl_errorMsg.IsVisible = true;
+                    return;
+                }
+
+                lbl_errorMsg.IsVisible = false;
+
+                // Bind new point to currently selected date + time now
+                DateTime entryDate = _selectedDate.Date + DateTime.Now.TimeOfDay;
+                DataPoint dataPoint = new DataPoint(amountConverted, entryDate);
+
+                dataPoints.Add(dataPoint);
+                await _LocalDbService.Create(dataPoint);
+
+                // Clear input
+                ent__main.Text = string.Empty;
+
+                // Display added data point
+                UpdateItemsSource();
+            }
+        }
+
+        #endregion
+
+
+        #region PrevDay and NextDay Logic
         private void btn__PrevDay_Clicked(object sender, EventArgs e)
         {
             _selectedDate = _selectedDate.AddDays(-1);
@@ -121,14 +173,9 @@ namespace CountCent
             UpdateItemsSource();
         }
 
-        private void UpdateDateLabel()
-        {
-            lbl_day.Text = _selectedDate.Date == DateTime.Today.Date
-                ? "Today"
-                : _selectedDate.ToString("ddd, MMM dd, yyyy");
-        }
+        #endregion
 
-
+        #region File Export, Writing to CSV
 
         private void btn__ExportToFile_Clicked(object sender, EventArgs e)
         {
@@ -156,9 +203,55 @@ namespace CountCent
             await Launcher.Default.OpenAsync(new OpenFileRequest("CountCent Export", new ReadOnlyFile(_lastExportedFilePath)));
         }
 
+        // Writing to CSV file method
+
+        static bool WriteToCsv(string filePath)
+        {
+            try
+            {
+                // in csv format
+                // Using CsvHelper for:
+                // Safety: Automatically escapes characters (e.g., if a user’s name is Doe, John, it wraps it in quotes so it doesn't break your columns).
+                // Mapping: It can map your C# classes directly to CSV headers with one line of code.
+                // Performance: It uses streams to handle millions of rows without crashing your app's memory.
+
+                // not culture dependent
+                // HasHeaderRecord - need a record in a file or not
+                var configWrite = new CsvConfiguration(CultureInfo.InvariantCulture)
+                {
+                    HasHeaderRecord = true
+                };
+
+                // StreamWriter will automatically create the file if it doesn't exist
+                using var writer = new StreamWriter(filePath);
+
+                // Use a lowerCamelCase variable name to avoid conflicting with the CsvWriter class type
+                using var csvWriter = new CsvWriter(writer, configWrite);
+                csvWriter.WriteRecords(dataPoints);
+
+                return true; // Success
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occured: {ex.Message}");
+                return false; // Fail
+            }
+        }
+
+
+
         #endregion
 
-        #region DELETE LOGIC 
+        #region Deleting an Entry: swipe, click
+
+        private async void SwipeItem_Delete_Invoked(object sender, EventArgs e)
+        {
+            if (sender is SwipeItem swipeItem && swipeItem.CommandParameter is DataPoint dp)
+            {
+                // Call wrapper instead
+                await TryProcessDelete(dp);
+            }
+        }
 
         private async void btn__DeleteEntry_Clicked(object sender, EventArgs e)
         {
@@ -174,14 +267,7 @@ namespace CountCent
             }
         }
 
-        private async void SwipeItem_Delete_Invoked(object sender, EventArgs e)
-        {
-            if (sender is SwipeItem swipeItem && swipeItem.CommandParameter is DataPoint dp)
-            {
-                // Call wrapper instead
-                await TryProcessDelete(dp);
-            }
-        }
+        
 
         // New confirmation wrapper
         private async Task TryProcessDelete(DataPoint dp)
@@ -226,40 +312,6 @@ namespace CountCent
 
         #endregion 
 
-        // Writing to CSV file method
-
-        static bool WriteToCsv(string filePath)
-        {
-            try
-            {
-                // in csv format
-                // Using CsvHelper for:
-                // Safety: Automatically escapes characters (e.g., if a user’s name is Doe, John, it wraps it in quotes so it doesn't break your columns).
-                // Mapping: It can map your C# classes directly to CSV headers with one line of code.
-                // Performance: It uses streams to handle millions of rows without crashing your app's memory.
-
-                // not culture dependent
-                // HasHeaderRecord - need a record in a file or not
-                var configWrite = new CsvConfiguration(CultureInfo.InvariantCulture)
-                {
-                    HasHeaderRecord = true
-                };
-
-                // StreamWriter will automatically create the file if it doesn't exist
-                using var writer = new StreamWriter(filePath);
-
-                // Use a lowerCamelCase variable name to avoid conflicting with the CsvWriter class type
-                using var csvWriter = new CsvWriter(writer, configWrite);
-                csvWriter.WriteRecords(dataPoints);
-
-                return true; // Success
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error occured: {ex.Message}");
-                return false; // Fail
-            }
-        }
-
+  
     }
 }

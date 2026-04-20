@@ -95,7 +95,8 @@
             x:Name="btn__SaveDataPoint"
             Grid.Column="0"
             Grid.Row="6"
-            Text="Add Entry" />
+            Text="Add Entry" 
+            Clicked="btn__SaveDataPoint_Clicked"/>
         <Button
             x:Name="btn__DeleteEntry"
             Grid.Column="1"
