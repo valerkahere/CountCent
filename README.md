@@ -10,10 +10,12 @@ That’s why there is **CountCent** — a *simple, value-driven, personal financ
 In summary, the CountCent app is a tool for users seeking a down-to-earth budget tracking app with least friction possible to manage their finances responsibly. 
 
 
-<p>
-  <a href="docs/countcent-home.png"><img src="docs/countcent-home.png" width="32%" alt="Home tab: today's expenses and the daily total"></a>
-  <a href="docs/countcent-analysis.png"><img src="docs/countcent-analysis.png" width="32%" alt="Analysis tab: all-time total and average per day"></a>
-  <a href="docs/countcent.png"><img src="docs/countcent.png" width="32%" alt="Home tab before any entries, with live EUR rates for USD, GBP, JPY and CHF"></a>
+<p align="center">
+  <a href="docs/countcent-home.png"><img src="docs/countcent-home.png" width="80%" alt="Home tab: today's expenses and the daily total"></a>
+</p>
+<p align="center">
+  <a href="docs/countcent-analysis.png"><img src="docs/countcent-analysis.png" width="49%" alt="Analysis tab: all-time total and average per day"></a>
+  <a href="docs/countcent.png"><img src="docs/countcent.png" width="49%" alt="Home tab before any entries, with live EUR rates for USD, GBP, JPY and CHF"></a>
 </p>
 
 ## Table of Contents
